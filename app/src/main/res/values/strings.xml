@@ -3,5 +3,4 @@
     <string name="btn_responder">Responder</string>
     <string name="btn_pular">Pular</string>
     <string name="hint_resposta">Insira o nome da capital</string>
-    <string name="pontuacao">Sua pontuação:</string>
 </resources>
