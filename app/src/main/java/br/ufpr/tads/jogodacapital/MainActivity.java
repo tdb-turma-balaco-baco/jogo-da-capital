@@ -15,29 +15,48 @@ import java.util.Map;
 import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
+    private static final int MAX_PERGUNTAS = 5;
+    private static final int QTD_ESTADOS = Estados.getEstados().length;
+
     private final Map<String, String> capitais = Estados.getCapitais();
     private final String[] estados = Estados.getEstados();
+
     private int pontuacao = 0;
     private int qtdPerguntasRealizadas = 0;
+
+    TextView ultimoResultado;
+    TextView estadoAtual;
+    EditText inputCapital;
+    TextView pontuacaoAtual;
+    Button pularBtn;
+    Button responderBtn;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        TextView pontuacaoAtual = findViewById(R.id.pontuacaoText);
-        pontuacaoAtual.setText("Sua pontuação atual: " + pontuacao);
+        this.initComponents();
+        this.realizarPergunta();
+    }
 
-        realizarPergunta();
+    private void initComponents() {
+        ultimoResultado = findViewById(R.id.ultimoResultadoText);
+        estadoAtual = findViewById(R.id.estadoAtual);
+        inputCapital = findViewById(R.id.inputCapital);
+        pontuacaoAtual = findViewById(R.id.pontuacaoText);
+        pularBtn = findViewById(R.id.pularBtn);
+        responderBtn = findViewById(R.id.responderBtn);
+
+        pontuacaoAtual.setText("Sua pontuação atual: " + pontuacao);
     }
 
     private String recuperarEstadoAleatorio() {
-        int indexAleatorio = new Random().nextInt(capitais.size());
+        int indexAleatorio = new Random().nextInt(QTD_ESTADOS);
         return estados[indexAleatorio];
     }
 
     public void handlePular(View pularBtn) {
-        TextView ultimoResultado = findViewById(R.id.ultimoResultadoText);
         ultimoResultado.setText("Você pulou o último estado");
         ultimoResultado.setTextColor(Color.DKGRAY);
 
@@ -45,11 +64,8 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void handleResposta(View responderBtn) {
-        TextView ultimoResultado = findViewById(R.id.ultimoResultadoText);
-        TextView estadoAtual = findViewById(R.id.estadoAtual);
         String nomeEstado = estadoAtual.getText().toString();
 
-        EditText inputCapital = findViewById(R.id.inputCapital);
         String resposta = inputCapital.getText().toString().toLowerCase(Locale.ROOT);
 
         if (capitais.get(nomeEstado).equalsIgnoreCase(resposta)) {
@@ -65,22 +81,18 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void registrarAcerto() {
-        TextView pontuacaoAtual = findViewById(R.id.pontuacaoText);
         this.pontuacao += 10;
         pontuacaoAtual.setText("Sua pontuação atual: " + pontuacao);
     }
 
     private void realizarPergunta() {
-        if (qtdPerguntasRealizadas >= 5) {
-            Button pularBtn = findViewById(R.id.pularBtn);
-            Button responderBtn = findViewById(R.id.responderBtn);
+        if (qtdPerguntasRealizadas >= MAX_PERGUNTAS) {
             pularBtn.setEnabled(false);
             responderBtn.setEnabled(false);
 
             Toast gameOver = Toast.makeText(this,"Fim do jogo!", Toast.LENGTH_SHORT);
             gameOver.show();
         } else {
-            TextView estadoAtual = findViewById(R.id.estadoAtual);
             estadoAtual.setText(recuperarEstadoAleatorio());
 
             this.qtdPerguntasRealizadas += 1;
