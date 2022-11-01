@@ -25,11 +25,14 @@ public class MainActivity extends AppCompatActivity {
     private int qtdPerguntasRealizadas = 0;
 
     TextView ultimoResultado;
-    TextView estadoAtual;
+    TextView textViewNomeEstado;
     EditText inputCapital;
     TextView pontuacaoAtual;
     Button pularBtn;
     Button responderBtn;
+
+    private String estadoAtual;
+    private String textoPontuacao;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,47 +45,51 @@ public class MainActivity extends AppCompatActivity {
 
     private void initComponents() {
         ultimoResultado = findViewById(R.id.ultimoResultadoText);
-        estadoAtual = findViewById(R.id.estadoAtual);
+        textViewNomeEstado = findViewById(R.id.estadoAtual);
         inputCapital = findViewById(R.id.inputCapital);
         pontuacaoAtual = findViewById(R.id.pontuacaoText);
         pularBtn = findViewById(R.id.pularBtn);
         responderBtn = findViewById(R.id.responderBtn);
+        textoPontuacao = getResources().getText(R.string.pontuacao_atual).toString();
 
-        pontuacaoAtual.setText("Sua pontuação atual: " + pontuacao);
+        pontuacaoAtual.setText(String.format("%s %s", textoPontuacao, pontuacao));
     }
 
-    private String recuperarEstadoAleatorio() {
+    private void definirEstadoAleatorio() {
         int indexAleatorio = new Random().nextInt(QTD_ESTADOS);
-        return estados[indexAleatorio];
+        this.estadoAtual = estados[indexAleatorio];
+        textViewNomeEstado.setText(estadoAtual);
     }
 
     public void handlePular(View pularBtn) {
-        ultimoResultado.setText("Você pulou o último estado");
+        ultimoResultado.setText(R.string.pular_msg);
         ultimoResultado.setTextColor(Color.DKGRAY);
-
-        realizarPergunta();
+        this.realizarPergunta();
     }
 
     public void handleResposta(View responderBtn) {
-        String nomeEstado = estadoAtual.getText().toString();
+        String respostaNormalizada = inputCapital.getText().toString().trim().toLowerCase(Locale.ROOT);
 
-        String resposta = inputCapital.getText().toString().toLowerCase(Locale.ROOT);
-
-        if (capitais.get(nomeEstado).equalsIgnoreCase(resposta)) {
-            registrarAcerto();
-            ultimoResultado.setText("Acertou!");
-            ultimoResultado.setTextColor(Color.GREEN);
+        if (capitais.get(estadoAtual).equalsIgnoreCase(respostaNormalizada)) {
+            this.registrarAcerto();
         } else {
-            ultimoResultado.setText("Errou...");
-            ultimoResultado.setTextColor(Color.RED);
+            this.registrarErro();
         }
 
-        realizarPergunta();
+        this.realizarPergunta();
     }
 
     private void registrarAcerto() {
         this.pontuacao += 10;
-        pontuacaoAtual.setText("Sua pontuação atual: " + pontuacao);
+        pontuacaoAtual.setText(String.format("%s %s", textoPontuacao, pontuacao));
+        ultimoResultado.setText(R.string.acertou);
+        ultimoResultado.setTextColor(Color.GREEN);
+    }
+
+    private void registrarErro() {
+        String mensagemErro = getResources().getText(R.string.errou).toString();
+        ultimoResultado.setText(String.format("%s %s", mensagemErro, capitais.get(estadoAtual)));
+        ultimoResultado.setTextColor(Color.RED);
     }
 
     private void realizarPergunta() {
@@ -90,15 +97,13 @@ public class MainActivity extends AppCompatActivity {
             pularBtn.setEnabled(false);
             responderBtn.setEnabled(false);
 
-            Toast gameOver = Toast.makeText(this,"Fim do jogo!", Toast.LENGTH_SHORT);
-            gameOver.show();
+            Toast.makeText(this, R.string.fim_jogo, Toast.LENGTH_SHORT).show();
         } else {
-            estadoAtual.setText(recuperarEstadoAleatorio());
-
+            this.definirEstadoAleatorio();
             this.qtdPerguntasRealizadas += 1;
         }
 
-        EditText inputCapital = findViewById(R.id.inputCapital);
+        // Limpa o campo de input, para aparecer novamente a hint
         inputCapital.setText("");
     }
 }
