@@ -16,7 +16,7 @@ import java.util.Random;
 
 public class MainActivity extends AppCompatActivity {
     private static final int MAX_PERGUNTAS = 5;
-    private static final int QTD_ESTADOS = Estados.getEstados().length;
+    private static final int QTD_ESTADOS = Estados.getLength();
 
     private final Map<String, String> capitais = Estados.getCapitais();
     private final String[] estados = Estados.getEstados();
@@ -68,9 +68,9 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void handleResposta(View responderBtn) {
-        String respostaNormalizada = inputCapital.getText().toString().trim().toLowerCase(Locale.ROOT);
+        String resposta = inputCapital.getText().toString().trim();
 
-        if (capitais.get(estadoAtual).equalsIgnoreCase(respostaNormalizada)) {
+        if (capitais.get(estadoAtual).equalsIgnoreCase(resposta)) {
             this.registrarAcerto();
         } else {
             this.registrarErro();
@@ -94,10 +94,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void realizarPergunta() {
         if (qtdPerguntasRealizadas >= MAX_PERGUNTAS) {
-            pularBtn.setEnabled(false);
-            responderBtn.setEnabled(false);
-
-            Toast.makeText(this, R.string.fim_jogo, Toast.LENGTH_SHORT).show();
+            finalizarJogo();
         } else {
             this.definirEstadoAleatorio();
             this.qtdPerguntasRealizadas += 1;
@@ -105,5 +102,11 @@ public class MainActivity extends AppCompatActivity {
 
         // Limpa o campo de input, para aparecer novamente a hint
         inputCapital.setText("");
+    }
+
+    private void finalizarJogo() {
+        pularBtn.setEnabled(false);
+        responderBtn.setEnabled(false);
+        Toast.makeText(this, R.string.fim_jogo, Toast.LENGTH_SHORT).show();
     }
 }

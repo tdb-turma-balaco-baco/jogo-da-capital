@@ -24,8 +24,7 @@ public class UnitTests {
 
     @Test
     public void quantidadeCorretaDeCapitais() {
-        Map<String, String> capitais = Estados.getCapitais();
-        assertEquals(15, capitais.size());
+        assertEquals(15, Estados.getLength());
     }
 
     @Test
