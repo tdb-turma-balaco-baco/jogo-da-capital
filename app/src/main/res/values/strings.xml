@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">Jogo da Capital</string>
+    <string name="btn_responder">Responder</string>
+    <string name="btn_pular">Pular</string>
+    <string name="hint_resposta">Insira o nome da capital</string>
+    <string name="pontuacao_atual">Sua pontuação atual:</string>
+    <string name="pular_msg">Você pulou o último estado</string>
+    <string name="acertou">Parabéns! Você acertou</string>
+    <string name="errou">Você errou! A capital era:</string>
+    <string name="fim_jogo">Jogo finalizado!</string>
 </resources>
